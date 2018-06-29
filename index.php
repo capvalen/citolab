@@ -2,10 +2,17 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
+	<meta property="og:url" content="http://citobiolab.com/huancayo/directorio/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Directorio - CITOBIOLAB" />
+<meta property="og:description" content="Lista de análisis" />
+<meta property="og:image" content="http://citobiolab.com/huancayo/wp-content/uploads/2018/06/bg00.jpg" />
+</head>
 	<title>Directorio - CITOBIOLAB</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/icofont.css">
-</head>
+
+
 <body>
 <style>
 *{font-family: "Arial";}
