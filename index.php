@@ -366,6 +366,12 @@ $('#btnBuscar').click(function () {
 	if($('#txtBuscar').val()!=''){window.location= 'index.php?buscar='+$('#txtBuscar').val();}
 	else{window.location= 'index.php';}
 });
+$('#txtBuscar').keypress(function(e) {
+	//e.prenventDefault();
+	if(e.which == 13) {
+		$('#btnBuscar').click();
+	}
+});
 $('#navAccess').click(function () {
 	$('#modalInicioSes').modal('show');
 });
