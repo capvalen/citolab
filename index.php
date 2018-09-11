@@ -9,17 +9,26 @@
 	<meta property="og:image" content="http://citobiolab.com/huancayo/wp-content/uploads/2018/06/bg00.jpg" />
 	<title>Directorio - CITOBIOLAB</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/icofont.css">
+	
 </head>
 <body>
 <style>
 *{font-family: "Arial";}
 #rowArriba{
-	color: #D7E9F4;background-color: #0e51a5; font-size: 15px;
+	color: #D7E9F4;background-color: #F0F0F0; font-size: 15px;height: 33px;
 }
 #spanNumber{font-size: 12px;}
 nav{box-shadow: 0 2px 4px 0 rgba(0,0,0,0.09);}
 .navbar{color: #3E4043;}
+.nav-link{font-size: 0.91rem; font-weight: 500;color: #939393!important;}
+.nav-link:hover{color:#10BAF2!important;}
+.dropdown-menu.show{padding: 10px; border: 0; border-radius: 5px; box-shadow: 0 2px 4px 2px rgba(0,0,0,0.09);}
+.dropdown-item{font-size: 12px; padding: .6em 10px;transition: all .3s;}
+.dropdown-item:hover{background: #3695EB;color:white;transition: all .3s;
+    transition: all .3s;
+    border-radius: 4px;}
 #contenedorPadre{color: #515151;font-size: 0.9rem;}
 .active a{color: #3695EB !important;}
 .filWord{background: #fafafa;}
@@ -54,8 +63,11 @@ footer .container{font-size: 10px;}
 </style>
 <div class="container-fluid">
 	<div class="row " id="rowArriba">
-		<div class="container d-flex justify-content-end my-1">
-			<span><span></span> <a href="https://www.facebook.com/Citobiolab-671664979603759/" target="_new"><img src="http://citobiolab.com/huancayo/wp-content/uploads/2018/07/siguenos-facebbok.png" width="auto" height="15"></a> <span  class="m-1">Llámenos:</span> <span id="spanNumber">(064) 22 23 22</span></span>
+		<div class="container d-flex  my-1">
+			<div class='mr-auto'><a href="https://www.facebook.com/Citobiolab-671664979603759/" target="_new"><img src="https://citobiolab.com/huancayo/wp-content/uploads/2018/08/siguenos-facebbok1.jpg" width="165" height="17"></a></div>
+			<div class="s"><a href="#!"><img src="https://citobiolab.com/huancayo/wp-content/uploads/2018/08/correo-web0.jpg" width="138" height="17" class=""></a></div>
+			<div class="s"><a href="#!"><img src="https://citobiolab.com/huancayo/wp-content/uploads/2018/08/aula-web0.jpg" width="186" height="17" class=""></a></div>
+			<div class="s"><a href="#!"><img src="https://citobiolab.com/huancayo/wp-content/uploads/2018/08/telefono-web1.jpg" width="243" height="17" class=""></a></div>
 		</div>
 	</div>
 </div>
@@ -71,16 +83,29 @@ footer .container{font-size: 10px;}
 	<div class="collapse navbar-collapse " id="navbarText">
 	  <ul class="navbar-nav d-flex justify-content-end ml-auto">
 		<li class="nav-item ">
-		  <a class="nav-link" href="http://citobiolab.com/huancayo/">INICIO </a>
+		  <a class="nav-link" href="http://citobiolab.com/huancayo/"><i class="fa fa-home"></i> INICIO </a>
+		</li>
+		<li class="nav-item dropdown">
+		  <a class="nav-link dropdown-toggle" id="navbCitobiolab" href="http://citobiolab.com/huancayo/home-layouts/home/" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-address-book"></i> CITOBIOLAB</a>
+			<div class="dropdown-menu" aria-labelledby="navbCitobiolab">
+					<a class="dropdown-item" href="https://citobiolab.com/huancayo/derechos-y-deveres/"><span>DERECHOS Y DEBERES</span></a>
+      </div>
+		</li>
+		<li class="nav-item dropdown">
+		  <a class="nav-link dropdown-toggle" id="navbServicios" href="#!" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-folder"></i> SERVICIOS</a>
+			<div class="dropdown-menu" aria-labelledby="navbServicios">
+				<a class="dropdown-item" href="https://citobiolab.com/huancayo/citobiolab/"><span>CITOBIOLAB</span></a>
+				<a class="dropdown-item" href="https://citobiolab.com/huancayo/laboratorio-clinico/"><span>LABORATORIO CLÍNICO</span></a>
+				<a class="dropdown-item" href="https://citobiolab.com/huancayo/patologia-y-citologia3/"><span>PATOLOGÍA Y CITOLOGÍA</span></a>
+				<a class="dropdown-item" href="https://citobiolab.com/huancayo/diagnostico-por-imagenes/"><span>DIAGNÓSTICO POR IMÁGENES</span></a>
+				<a class="dropdown-item" href="https://citobiolab.com/huancayo/densitometria-osea/"><span>DENSITOMETRÍA ÓSEA</span></a>
+      </div>
 		</li>
 		<li class="nav-item">
-		  <a class="nav-link" href="http://citobiolab.com/huancayo/home-layouts/home/">CITOBIOLAB</a>
+		  <a class="nav-link" href="http://citobiolab.com/huancayo/nosotros/contact-us/"><i class="fa fa-edit"></i> RECOMENDACIONES</a>
 		</li>
-		<li class="nav-item">
-		  <a class="nav-link" href="http://citobiolab.com/huancayo/nosotros/contact-us/">CONTÁCTENOS</a>
-		</li>
-		<li class="nav-item active">
-		  <a class="nav-link" href="http://citobiolab.com/huancayo/nosotros/contact-us/">DIRECTORIO</a>
+		<li class="nav-item ">
+		  <a class="nav-link" href="http://citobiolab.com/huancayo/nosotros/contact-us/"><i class="fa fa-address-card"></i> CONTÁCTENOS</a>
 		</li>
 		<li class="nav-item active">
 		  <a class="nav-link" id="navAccess" href="#!"><i class="icofont icofont-lock"></i></a>
