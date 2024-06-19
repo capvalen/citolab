@@ -85,7 +85,7 @@ if (!isset($_COOKIE['ckPoder'])) header("Location: index.html");
 
 		<section class="container mt-3 " id="divResultados">
 		<div class="d-flex justify-content-between oneTest p-2 pl-3 " v-for="(muestra, index) in muestras" >
-			<span class="aNombre text-uppercase me-auto">{{index+1}}. {{muestra.nombre}}</span>
+			<span class="aNombre text-uppercase me-auto" @click="abrir1Muestra(muestra.id, index)" data-bs-toggle="modal" data-bs-target="#modalDetalles">{{index+1}}. {{muestra.nombre}}</span>
 			<button class="btn btn-outline-secondary btn-sm d-none d-md-block btnDetalles" @click="abrir1Muestra(muestra.id, index)" data-bs-toggle="modal" data-bs-target="#modalDetalles"><i class="bi bi-caret-right-fill"></i> Ver Detalle</button>
 			<?php if($_COOKIE['ckPoder']==1): ?>
 			<button class="btn btn-sm btn-outline-light border-0 mx-1" @click="abrirActualizar(index)" data-bs-toggle="modal" data-bs-target="#modalEdit"><i class="bi bi-pencil-square"></i></button>
