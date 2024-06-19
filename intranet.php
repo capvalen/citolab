@@ -1,3 +1,7 @@
+
+<?php
+if (!isset($_COOKIE['ckPoder'])) header("Location: index.html");
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,10 +16,11 @@
 <body >
 	<div id="app">		
 		<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #fff;">
-			<div class="container">
+			<div class="container d-flex justify-content-between">
 				<a  class="navbar-brand mt-0 py-0" href="http://citobiolab.com/huancayo" title="CITOBIOLAB" class="logo " style="min-width:198px">
 					<img src="http://citobiolab.com/huancayo/wp-content/uploads/2018/06/logo-biolab.png" alt="CITOBIOLAB" class="normal-logo" style="padding: 12.5px 0; max-height: 75px;" height="75">
 				</a>
+				<a class="btn btn-outline-secondary" href="desconectar.php"><i class="bi bi-person-fill-lock"></i> Cerrar sesión</a>
 			</div>
 		</nav>
 		<section class="container  ">
@@ -32,7 +37,9 @@
 					</div>
 				</div>
 				<div class="col-12 col-md-3 d-grid gap-2 d-flex align-items-center">
+					<?php if($_COOKIE['ckPoder']==1): ?>
 					<button class="btn btn-outline-primary" @click="elegirNuevo" data-bs-toggle="modal" data-bs-target="#modalEdit"><i class="bi bi-asterisk"></i> Nuevo análisis</button>
+					<?php endif; ?>
 				</div>
 			</div>
 		</section>
@@ -79,9 +86,11 @@
 		<section class="container mt-3 " id="divResultados">
 		<div class="d-flex justify-content-between oneTest p-2 pl-3 " v-for="(muestra, index) in muestras" >
 			<span class="aNombre text-uppercase me-auto">{{index+1}}. {{muestra.nombre}}</span>
-			<button class="btn btn-sm btn-outline-light border-0 mx-1" @click="abrirActualizar(index)" data-bs-toggle="modal" data-bs-target="#modalEdit"><i class="bi bi-pencil-square"></i></button>
 			<button class="btn btn-outline-secondary btn-sm d-none d-md-block btnDetalles" @click="abrir1Muestra(muestra.id, index)" data-bs-toggle="modal" data-bs-target="#modalDetalles"><i class="bi bi-caret-right-fill"></i> Ver Detalle</button>
+			<?php if($_COOKIE['ckPoder']==1): ?>
+			<button class="btn btn-sm btn-outline-light border-0 mx-1" @click="abrirActualizar(index)" data-bs-toggle="modal" data-bs-target="#modalEdit"><i class="bi bi-pencil-square"></i></button>
 			<button class="btn btn-sm btn-outline-danger border-0 mx-1" @click="eliminar(index)"><i class="bi bi-x-circle-fill"></i></button>
+			<?php endif; ?>
 		</div>
 		</section>
 
@@ -149,7 +158,8 @@
 						<label for="">Precio</label>
 						<input type="text" class="form-control" v-model="nuevo.precio">
 						<div class="mt-2 d-grid d-flex justify-content-center">
-							<button v-if="!esNuevo" class="btn btn-outline-primary " @click="actualizar()" data-bs-dismiss="modal"><i class="bi bi-pencil-square"></i> Actualizar análisis</button>
+							<button v-if="esNuevo" class="btn btn-outline-primary " @click="crear()" data-bs-dismiss="modal"><i class="bi bi-pencil-square"></i> Crear nuevo análisis</button>
+							<button v-else class="btn btn-outline-primary " @click="actualizar()" data-bs-dismiss="modal"><i class="bi bi-pencil-square"></i> Actualizar análisis</button>
 						</div>
 					</div>
 				</div>
@@ -163,11 +173,12 @@
 	createApp({
 		setup() {
 			const servidor = ref('http://localhost/citolab/php/')
+			//const servidor = ref('https://citobiolab.com/huancayo/intranet/php/')
 			var texto = ref('')
 			var indexGlobal = ref(-1)
 			var muestras = ref([]);
 			var queMuestra = ref([])
-			var esNuevo = false
+			var esNuevo = ref(false)
 			var nuevo = ref({nombre: '', codigo: '', muestra: '', contenedor: '', volumen: '', conservacion: '', metodologia: '', especialidad: '', entrega: '', condiciones: '', precio: 0, id:-1})
 			
 			async function verMuestra(letra){
@@ -189,6 +200,20 @@
 			function abrir1Muestra(id, index){
 				indexGlobal.valeu = index
 				queMuestra.value = muestras.value[index]
+			}
+			async function crear(){
+				if(nuevo.value.nombre=='') alert('No se puede crear un análisis sin nombre')
+				else{
+					let datos = new FormData()
+					datos.append('muestra', JSON.stringify(nuevo.value))
+					const serv = await fetch(servidor.value +'insertarAnalisis.php',{
+						method:'POST', body:datos
+					})
+					const resp = await serv.text()
+					if(resp == 'ok'){
+						alert ('Análisis creado exitósamente')
+					}
+				}
 			}
 			async function actualizar(){
 				let datos = new FormData()
@@ -231,12 +256,25 @@
 				esNuevo.value = false
 			}
 			function elegirNuevo(){
+				nuevo.value.nombre = ''
+				nuevo.value.codigo = ''
+				nuevo.value.muestra = ''
+				nuevo.value.contenedor = ''
+				nuevo.value.volumen = ''
+				nuevo.value.conservacion = ''
+				nuevo.value.metodologia = ''
+				nuevo.value.especialidad = ''
+				nuevo.value.entrega = ''
+				nuevo.value.condiciones = ''
+				nuevo.value.precio = 0
+				nuevo.value.id = -1
+				indexGlobal.value = -1
 				esNuevo.value = true
 			}
 
 			return {
 				servidor, texto, muestras, indexGlobal,queMuestra, nuevo, esNuevo,
-				verMuestra, buscarTexto, abrir1Muestra, eliminar, abrirActualizar, actualizar, elegirNuevo
+				verMuestra, buscarTexto, abrir1Muestra, eliminar, abrirActualizar, actualizar, elegirNuevo, crear
 			}
 		}
 	}).mount('#app')

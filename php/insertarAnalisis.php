@@ -1,17 +1,20 @@
-
 <?php 
-session_start();
-header('Content-Type: text/html; charset=utf8');
 require("conectKarl.php");
 
+$muestra = json_decode($_POST['muestra'], true);
 
-$sql= "INSERT INTO `analisis`(`idAnalisis`, `codigo`, `nombre`, `muestra`, `anaCondiciones`, `anaPlazo`, `anaEspecialidad`, activo) 
-VALUES (null,'{$_POST['codig']}','{$_POST['nombr']}','{$_POST['muestr']}','{$_POST['condicion']}','{$_POST['plazo']}','{$_POST['especialida']}', 1)";
-//echo $sql;
-if($conection->query($sql)){
-	echo true;
-}
-
-mysqli_close($conection);
-
+$sql = $datab->prepare("INSERT INTO `analisis`(
+	`codigo`, `nombre`, `muestra`, `contenedor`, `volumen`, `conservacion`,
+	`metodologia`, `especialidad`, `entrega`, `condiciones`, `precio`) VALUES(
+	?, ?, ?, ?, ?, ?,
+	?, ?, ?, ?, ? );");
+	
+	if($sql->execute([
+		$muestra['codigo'], $muestra['nombre'], $muestra['muestra'], $muestra['contenedor'], $muestra['volumen'], $muestra['conservacion'], 
+		$muestra['metodologia'], $muestra['especialidad'], $muestra['entrega'], $muestra['condiciones'], $muestra['precio']
+	])){
+		echo 'ok';
+	}else{
+		echo 'error';
+	}
 ?>

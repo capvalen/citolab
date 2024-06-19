@@ -1,5 +1,4 @@
 <?php 
-header('Content-Type: text/html; charset=utf8');
 require("conectKarl.php");
 
 $muestra  = json_decode($_POST['muestra'],true);
