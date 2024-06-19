@@ -1,17 +1,19 @@
-
 <?php 
-session_start();
 header('Content-Type: text/html; charset=utf8');
 require("conectKarl.php");
 
+$muestra  = json_decode($_POST['muestra'],true);
 
-$sql= "UPDATE `analisis` SET `codigo`=upper('{$_POST['codig']}'),`nombre`=upper('{$_POST['nombr']}'),`muestra`=upper('{$_POST['muestr']}'),`anaCondiciones`=upper('{$_POST['condicion']}'),`anaPlazo`=upper('{$_POST['plazo']}'),`anaEspecialidad`=upper('{$_POST['especialida']}')
- WHERE `idAnalisis` = {$_POST['codigo']};";
-echo $sql;
-if($conection->query($sql)){
-	echo true;
+$sql= $datab->prepare("UPDATE `analisis` SET 
+`codigo`=?,`nombre`=?,`muestra`=?,`contenedor`=?,`volumen`=?,`conservacion`=?,
+`metodologia`=?,`especialidad`=?,`entrega`=?,`condiciones`=?,`precio`=?
+WHERE `id`=?");
+
+if($sql->execute([
+	$muestra['codigo'], $muestra['nombre'], $muestra['muestra'], $muestra['contenedor'], $muestra['volumen'], $muestra['conservacion'], 
+	$muestra['metodologia'], $muestra['especialidad'], $muestra['entrega'], $muestra['condiciones'], $muestra['precio'], $muestra['id']
+])){
+	echo 'ok';
 }
-
-mysqli_close($conection);
 
 ?>
