@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Intranet CitoLab</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+</head>
+<body>
+	<section class="container my-5 " id="app">
+		<p class="fs-3 text-center pb-5">Bienvenido CitoBioLab</p>
+		<div class="card w-100">
+			<div class="card-body row">
+				<div class="col-md-6 col-lg-5 p-3 ">
+					<p class="fs-5 text-center">Consulta de registros de muestras</p>
+					<label for="">DNI del paciente:</label>
+					<input type="text" class="form-control mt-3" placeholder="DNI...">
+					<div class="d-grid mt-3	">
+						<button class="btn btn-primary btn-block btn-lg">Consultar</button>
+					</div>
+				</div>
+				<div class="col-md-6  col-lg-5 offset-lg-2 p-3">
+					<p class="fs-5 text-center">Ingreso a Intranet</p>
+					<p>Ingrese sus credenciales</p>
+					<div>
+						<div class="mb-3">
+							<label for="username" class="form-label">Usuario</label>
+							<input type="text" id="username" class="form-control" v-model="datos.usuario">
+						</div>
+						<div class="mb-3">
+							<label for="password" class="form-label">Contraseña</label>
+							<input type="password" id="password" class="form-control" v-model="datos.clave">
+						</div>
+						<div class="d-grid mt-3"><button class="btn btn-primary btn-block btn-lg" @click="iniciar">Iniciar sesión</button></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		const { createApp, ref, onMounted } = Vue
+	
+		createApp({
+			setup() {
+				const servidor = 'http://localhost/citolab/intranet/api/'
+				const datos = {usuario:'', clave:''}
+
+				onMounted(()=>{
+					localStorage.removeItem('idUsuario')
+					localStorage.removeItem('nombreUsuario')
+				})
+
+				function iniciar(){
+					axios.post(servidor + 'validarLogin.php',{
+						usuario: datos.usuario,
+						clave: datos.clave
+					})
+					.then(response=>{
+						if(response.data.mensaje == 'ok'){
+							localStorage.setItem('idUsuario', response.data.usuario.idUsuario)
+							localStorage.setItem('nombreUsuario', response.data.usuario.usuNombre)
+							console.log('acceder...')
+							window.location = 'intranet.html'
+						}else
+							alert('Error con las credenciales')
+					})
+
+				}
+				return {
+					datos,
+					iniciar
+				}
+			}
+		}).mount('#app')
+	</script>
+</body>
+</html>
