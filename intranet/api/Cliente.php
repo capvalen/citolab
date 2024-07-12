@@ -5,13 +5,23 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 switch ($data['pedir']) {
 	case 'crear': crear($datab, $data); break;
+	case 'buscarDNI': buscarDNI($datab, $data); break;
 	case 'listar': listar($datab, $data); break;
 	case 'listarID': listarID($datab, $data); break;
+	case 'registrarMuestra': registrarMuestra($datab, $data); break;
 	default:
 		# code...
 		break;
 }
 
+function buscarDNI($db, $data){
+	$filas = [];
+	$sql= $db->prepare("SELECT * FROM `clientes` where dni= ? limit 1; ");
+	$sql->execute([$data['dni']]);
+	$row= $sql->fetch(PDO::FETCH_ASSOC);
+	$filas = $row;
+	echo json_encode($filas);
+}
 function listarID($db, $data){
 	$filas = [];
 	$sql= $db->prepare("SELECT * FROM `clientes` where id= ?; ");
@@ -55,4 +65,24 @@ function crear($db, $data){
 	echo json_encode( array('idCliente' => $idCliente));
 }
 
+function registrarMuestra($db, $data){
+	ob_start();
+	crear($db, $data);
+	$respuesta = ob_get_clean();
+	$aRespuesta = json_decode($respuesta, true);
+	$idCliente = $aRespuesta['idCliente'];
+
+	$idMuestra=-1;
+	$muestra = $data['muestra'];
+
+	$sql = $db->prepare("INSERT INTO `muestras`(`idCliente`, `fecha`, `codigo`, `idMedico`, `muestra`, `idSede`) VALUES (?,?,?,?,?,?)");
+	$sent = $sql->execute([
+		$idCliente, $muestra['fecha'],$muestra['codigo'],$muestra['medico'],$muestra['muestra'], $muestra['sede']
+	]);
+
+	if($sent) $idMuestra = $db->lastInsertId();
+
+	echo json_encode( array('idMuestra' => $idMuestra));
+
+}
 ?>
