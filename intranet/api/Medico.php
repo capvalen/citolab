@@ -21,11 +21,10 @@ function listar($db){
 
 function crear($db, $data){
 	$id='';
-	$sql = $db->prepare("INSERT INTO `medicos`(`nombre`) VALUES (?)");
-	$sent = $sql->execute([ $data['sede']['sede'] ]);
+	$sql = $db->prepare("INSERT INTO `medicos`(`nombre`, `dni`, `esEmpresa`) VALUES (?, ?, ?)");
+	$sent = $sql->execute([ $data['sede']['sede'], $data['sede']['dni'], $data['sede']['entidad'] ]);
 	if($sent) $id = $db->lastInsertId();
 	echo json_encode( array('id' => $id));
-
 }
 
 ?>

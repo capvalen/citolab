@@ -14,8 +14,8 @@
 </head>
 <body>
 	<section class="shadow">
-		<div class="container d-lg-flex align-items-center p-3">
-			<img src="http://citobiolab.com/huancayo/wp-content/uploads/2018/06/logo-biolab.png" class="img-fluid">
+		<div class="container d-lg-flex align-items-center justify-content-center p-3">
+			<img src="https://citobiolab.com/wp-content/uploads/2024/06/cito-logo.png" class="img-fluid">
 			<h1>Intranet de CitoBiolab</h1>
 		</div>
 	</section>
@@ -23,7 +23,7 @@
 		<section class="container mt-5 " id="app">
 			<div class="d-grid d-lg-flex gap-2 ">
 				<a href="registro-cliente.html"class="btn btn-outline-dark"><i class="bi bi-person-fill"></i> Nuevo cliente</a>
-				<a href="registro-medico.html"class="btn btn-outline-dark"><i class="bi bi-person-fill"></i> Nuevo ḿédico</a>
+				<a href="registro-medico.html"class="btn btn-outline-dark"><i class="bi bi-hospital-fill"></i> GEstión Médico / Empresa</a>
 				<a href="registro-localidad.html" class="btn btn-outline-dark"><i class="bi bi-asterisk"></i> Nueva localidad</a>
 				<a href="registro-muestra.html" class="btn btn-outline-dark"><i class="bi bi-asterisk"></i> Registrar muestra</a>
 				<button href="registro-muestra.html" class="btn btn-outline-dark" @click="salir"><i class="bi bi-box-arrow-left"></i> Salir</button>
@@ -51,6 +51,13 @@
 								<option v-for="sede in sedes" :value="sede.id" class="text-capitalize">{{sede.sede}}</option>
 							</select>
 						</div>
+						<div class="col-12 col-lg-3">
+							<label class="mt-1"><i class="bi bi-funnel"></i> Médico o Empresa</label>
+							<select class="form-select mb-2 text-capitalize" id="sltFiltroMedico" v-model="filtro.medico">
+								<option value="0">Todos</option>
+								<option v-for="medico in medicos" :value="medico.id" class="text-capitalize">{{medico.nombre}}</option>
+							</select>
+						</div>
 						<div class="col-12 col-lg-3 gap-1 d-flex align-items-end">
 							<button class="btn btn-outline-primary" @click="buscar()"><i class="bi bi-funnel-fill"></i> Filtrar</button>
 							<button class="btn btn-outline-primary" @click="limpiar()"><i class="bi bi-funnel-fill"></i> Limpiar</button>
@@ -67,6 +74,7 @@
 					<thead>
 						<th>N°</th>
 						<th>Muestra</th>
+						<th>DNI</th>
 						<th>Nombre de cliente</th>
 						<th>Fecha de toma</th>
 						<th>Estado</th>
@@ -79,6 +87,7 @@
 						<tr v-for="(muestra, index) in muestras">
 							<td>{{index+1}}</td>
 							<td class="text-capitalize">{{muestra.muestra}}</td>
+							<td class="text-capitalize">{{muestra.dni}}</td>
 							<td class="text-capitalize">{{muestra.nombre}}</td>
 							<td>{{fechaLatam(muestra.fecha)}}</td>
 							<td>
@@ -131,10 +140,11 @@
 				const servidor = 'https://intranet.citobiolab.com/api/'
 				const muestras = ref([])
 				const sedes = ref([])
+				const medicos = ref([])
 				const indexGlobal = ref(-1)
 				const archivo = ref(null)
 				const filtrado = ref(false)
-				const filtro = ref({ dni:'', estado:0, sede:0 })
+				const filtro = ref({ dni:'', estado:0, sede:0, medico:0 })
 				
 				onMounted(()=>{
 					if(!localStorage.getItem('idUsuario')) window.location = 'index.html'
@@ -148,6 +158,11 @@
 						pedir:'listar'
 					})
 					.then(response => sedes.value = response.data )
+
+					axios.post(servidor+'Medico.php',{
+						pedir:'listar'
+					})
+					.then(response => medicos.value = response.data )
 
 					axios.post(servidor + 'Muestra.php',{
 						pedir:'listar'
@@ -205,6 +220,7 @@
 						dni: filtro.value.dni,
 						estado: filtro.value.estado,
 						sede: filtro.value.sede,
+						medico: filtro.value.medico,
 					}).then(response=> muestras.value = response.data)
 				}
 				function salir(){
@@ -213,7 +229,7 @@
 					window.location='index.html'
 				}
 				return {
-					servidor,muestras, fechaLatam, eliminar, indexGlobal, archivo, upload, salir, filtrado, sedes, limpiar, buscar, filtro
+					servidor,muestras, fechaLatam, eliminar, indexGlobal, archivo, upload, salir, filtrado, sedes, limpiar, buscar, filtro, medicos
 				}
 			}
 		}).mount('#app')

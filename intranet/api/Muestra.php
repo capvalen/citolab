@@ -15,11 +15,11 @@ switch ($data['pedir']) {
 
 function listar($db){
 	$filas = [];
-	$sql= $db->prepare("SELECT m.*, c.nombre, s.sede, me.nombre as nombreMedico FROM `muestras` m
+	$sql= $db->prepare("SELECT m.*, c.dni, c.nombre, s.sede, me.nombre as nombreMedico FROM `muestras` m
 	inner join clientes c on c.id = m.idCliente
 	inner join sedes s on s.id = m.idSede
 	inner join medicos me on me.id = m.idMedico
-	where m.activo = 1");
+	where m.activo = 1 order by m.id desc");
 	$sql->execute();
 	while($row= $sql->fetch(PDO::FETCH_ASSOC))
 		$filas [] = $row;
@@ -32,6 +32,7 @@ function buscarPorFiltros($db, $data){
 	if($data['dni']) $filtro = " c.dni = '{$data['dni']}' and ";
 	if($data['estado']) $filtro .= " m.estado = {$data['estado']} and ";
 	if($data['sede'] && $data['sede']<>0) $filtro .= " m.idSede = {$data['sede']} and ";
+	if($data['medico'] && $data['medico']<>0) $filtro .= " m.idMedico = {$data['medico']} and ";
 	//echo $filtro; die();
 	$sql= $db->prepare("SELECT m.*, c.nombre, s.sede, me.nombre as nombreMedico FROM `muestras` m
 	inner join clientes c on c.id = m.idCliente

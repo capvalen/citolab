@@ -21,71 +21,29 @@
 	</section>
 	<div id="app">
 		<section class="container my-5 ">
-			<p class="fs-2 text-center pb-2"><i class="bi bi-clipboard2-pulse"></i> BIENVENIDO A CITOBIOLAB</p>
+			<p class="fs-2 text-center pb-2"><i class="bi bi-clipboard2-pulse"></i> SISTEMA A CITOBIOLAB</p>
 			<div class="card w-100">
 				<div class="card-body row">
-					<div class="col-md-6 col-lg-5 p-3">
-						<p class="fs-5 text-center"><i class="bi bi-info-circle"></i> Categorías a tener en cuenta</p>
-						<div class="accordion" id="accordionFlushExample">
-							<div class="accordion-item">
-								<h2 class="accordion-header">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-										Pacientes
-									</button>
-								</h2>
-								<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-									<div class="accordion-body"><p>En esta sección usted tendrá acceso a los resultados de los análisis que se realizó en nuestro laboratorio, también podrá consultar los resultados históricos de estos. </p>
-									<ul>
-										<li>Si usted se acercó a una de nuestras sucursales:</p>
-											<p>El usuario se encuentra en la orden de atención proporcionada por nuestro counter y se encuentran en la parte superior derecha de este formato.</p>
-										</li>
-										<li><p>Si usted fue atendido en su domicilio u oficina:</p>
-											<p>El usuario se encuentra en la orden de atención a domicilio que se le proporcionó al momento de la atención y se encuentran en la parte superior derecha de dicho formato.</p></li>
-									</ul>
-									</div>
-								</div>
+					<p><a href="javascript:history.back()">Volver</a></p>
+					<div class="col-md-6  col-lg-5 offset-lg-2 mx-auto p-3">
+						<p class="fs-5 text-center">Ingreso Al Panel</p>
+						<p>Ingrese sus credenciales</p>
+						<div>
+							<div class="mb-3">
+								<label for="username" class="form-label">Usuario</label>
+								<input type="text" id="username" class="form-control form-control-lg" v-model="datos.usuario">
 							</div>
-							<div class="accordion-item">
-								<h2 class="accordion-header">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-										Médicos
-									</button>
-								</h2>
-								<div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-									<div class="accordion-body">
-										<p>En esta sección usted tendrá acceso a los resultados históricos de los análisis de sus pacientes, siempre que éste haya exigido el registro de su médico tratante.</p>
-
-										<p>Si Ud. no tiene un usuario solicítelo llamando a nuestra central telefónica o escribanos a vía correo, las credenciales serán enviadas al correo electrónico registrado en nuestra base de datos.</p>
-									</div>
-								</div>
+							<div class="mb-3">
+								<label for="password" class="form-label">Contraseña</label>
+								<input type="password" id="password" class="form-control form-control-lg" v-model="datos.clave">
+								<button class="btn btn-outline-secondary mt-2" @click="ocultarClave"><i class="bi bi-eye"></i> 
+									<span v-if="!verClave"> Ver contraseña</span>
+									<span v-else> Ocultar contraseña</span>
+								</button>
 							</div>
-							<div class="accordion-item">
-								<h2 class="accordion-header">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-										Empresas
-									</button>
-								</h2>
-								<div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-									<div class="accordion-body">
-										<p>Sección creada para clínicas y centros de salud que son socios estratégicos y/o cuentan con un convenio con Synlab Perú; Así como los laboratorios a los cuales ofrecemos los servicios de tercerización.</p>
-
-										<p>Usted tendrá acceso a los resultados históricos de los análisis de sus pacientes, y tarifario asignado.</p>
-									</div>
-								</div>
-							</div>
-							<p class="mt-2"><a class="text-decoration-none" href="login.html">Login</a></p>
-						</div>
-
-					</div>
-					<div class="col-md-6 col-lg-5 offset-lg-1 p-3 ">
-						<p class="fs-5 text-center">Consulta de registros de muestras</p>
-						<label for="">Consulte sus muestras con su DNI:</label>
-						<input type="text" class="form-control form-control-lg mt-3" placeholder="DNI..." v-model="filtro.dni" @keyup.enter="buscarClick">
-						<div class="d-grid mt-3	">
-							<button class="btn btn-primary btn-block btn-lg" id="consultarDNI" @click="consultarDNI" data-bs-toggle="modal" data-bs-target="#modalResultados"><i class="bi bi-search"></i> Consultar</button>
+							<div class="d-grid mt-3"><button class="btn btn-primary btn-block btn-lg" @click="iniciar"><i class="bi bi-door-open"></i> Iniciar sesión</button></div>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</section>
@@ -109,7 +67,7 @@
 									<th>N°</th>
 									<th>Fecha</th>
 									<th>Muestra</th>
-									<th>Documento</th>
+									<th>Estado</th>
 								</thead>
 								<tbody>
 									<tr v-for="(muestra, index) in muestras">
@@ -146,6 +104,7 @@
 				const muestras = ref([])
 				const cliente = ref([])
 				const filtro = ref({ dni:'' })
+				const verClave = ref(false)
 
 				onMounted(()=>{
 					localStorage.removeItem('idUsuario')
@@ -168,11 +127,6 @@
 					})
 
 				}
-
-				function buscarClick(){
-					const btn = document.getElementById('consultarDNI')
-					btn.click()
-				}
 				
 				function consultarDNI(){
 					axios.post(servidor + 'Muestra.php',{
@@ -190,22 +144,20 @@
 					if(fecha) return moment(fecha).format('DD/MM/YYYY')
 				}
 
+				function ocultarClave(){
+					verClave.value = !verClave.value
+					const input = document.getElementById('password')
+					if(verClave.value) input.type = 'text'
+					else input.type = 'password'
+					
+				}
+
 				return {
-					datos, muestras, filtro, cliente,buscarClick,
-					consultarDNI, fechaLatam
+					datos, muestras, filtro, cliente,verClave,
+					iniciar, consultarDNI, fechaLatam, ocultarClave
 				}
 			}
 		}).mount('#app')
 	</script>
-	<style>
-		.accordion-button{
-			background-color: #89b9fe;
-			color: #0960ff;
-		}
-		.accordion-button:not(.collapsed){
-			color: white;
-    	background-color: #0d6efd;
-		}
-	</style>
 </body>
 </html>

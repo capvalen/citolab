@@ -15,20 +15,63 @@
 <body>
 	<section class="container my-5 " id="app">
 		<button class="btn btn-outline-primary" onclick="history.back()"><i class="bi bi-arrow-left"></i> Volver</button>
-		<h1 class="text-center">Registro de médico</h1>
+		<h1 class="text-center">Registro de médicos y empresas</h1>
 
 		<div class="row">
 			<div class="col-12 col-lg-7 mx-auto">
 				<div class="card">
 					<div class="card-body">
-						<label for="nombre-paciente" class="form-label mt-3">Apellidos y nombres</label>
-						<input type="text" id="nombre-paciente" class="form-control" v-model="sede.sede">
+						<label for="nombre-paciente" class="form-label mt-3">Tipo de persona / entidad <span class="text-danger"> *</span></label>
+						<select class="form-select" id="sltEntiedad" v-model="sede.entidad">
+							<option value='0'>Personal médico</option>
+							<option value='1'>Entidad</option>
+						</select>
+						<label for="nombre-paciente" class="form-label mt-3">
+							<span v-if="sede.entidad==0">D.N.I.</span> 
+							<span v-if="sede.entidad==1">R.U.C.</span> 
+							<span class="text-danger"> *</span>
+						</label>
+						<input type="text" id="nombre-paciente" class="form-control" v-model="sede.dni" autocomplete="off">
+						<label for="nombre-paciente" class="form-label mt-3">
+							<span v-if="sede.entidad==0">Apellidos y nombres</span>
+							<span v-if="sede.entidad==1">Razón social</span>
+							<span class="text-danger"> *</span>
+						</label>
+						<input type="text" id="nombre-paciente" class="form-control" v-model="sede.sede" autocomplete="off">
 
 						<div class="d-grid">
-							<button class="btn btn-outline-primary btn-lg my-3" @click="crear()"><i class="bi bi-floppy2-fill"></i> Crear  médico</button>
+							<button class="btn btn-outline-primary btn-lg my-3" @click="crear()"><i class="bi bi-floppy2-fill"></i>  
+								<span v-if="sede.entidad==0"> Crear médico</span>
+								<span v-if="sede.entidad==1"> Crear empresa</span>
+						</button>
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<table class="table table-hover">
+					<thead>
+						<th>N°</th>
+						<th>Nombre</th>
+						<th>DNI - RUC</th>
+						<th>Tipo</th>
+						<th>@</th>
+					</thead>
+					<tbody>
+						<tr v-for="(medico, index) in medicos">
+							<td>{{index+1}}</td>
+							<td>{{medico.nombre}}</td>
+							<td>{{medico.dni}}</td>
+							<td>
+								<span v-if="medico.esEmpresa==0">Médico</span>
+								<span v-else>Entidad</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
@@ -41,29 +84,37 @@
 		const app = createApp({
 			setup() {
 				const servidor = 'https://intranet.citobiolab.com/api/'
-				const sede = {
-					sede:''
-				}
+				const sede = ref({
+					sede:'', entidad:0, dni:''
+				})
+				const medicos = ref([])
 
 				function crear(){
-					axios.post(servidor+'Medico.php',{
-						pedir:'crear', sede
-					})
-					.then(response =>{
-						if( response.data.id > 0 ){
-							alert(`Médico ${sede.sede}. Creado con éxito`)
-							history.back()
-						}
-					})
+					if(!sede.value.dni || !sede.value.sede) alert('Todos los campos son obligatorios')
+					else{
+						axios.post(servidor+'Medico.php',{
+							pedir:'crear', sede: sede.value
+						})
+						.then(response =>{
+							if( response.data.id > 0 )
+								alert(`${sede.value.sede}. Creado con éxito`)
+								window.location = 'intranet.html'
+						})
+					}
 				}
 				
 				onMounted(()=>{
 					if(!localStorage.getItem('idUsuario')) window.location = 'index.html'
 					else{
+						axios.post(servidor+'Medico.php',{
+							pedir: 'listar'
+						}).then(response =>{
+							medicos.value = response.data
+						})
 					}
 				})
 				return {
-					sede,
+					sede, medicos,
 					servidor, crear
 				}
 			}

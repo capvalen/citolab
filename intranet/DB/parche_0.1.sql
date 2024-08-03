@@ -1,0 +1,2 @@
+ALTER TABLE `medicos` ADD `dni` VARCHAR(250) NULL AFTER `nombre`, ADD `esEmpresa` INT NULL DEFAULT '0' COMMENT '0=medico, 1=empresa' AFTER `codigo`;
+ALTER TABLE `medicos` CHANGE `activo` `activo` INT(11) NULL DEFAULT '1';
