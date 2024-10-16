@@ -1,9 +1,10 @@
 <?php
+error_reporting(E_ALL); ini_set("display_errors", 1);
 require("conectInfocat.php");
 $data = json_decode(file_get_contents('php://input'), true);
 
 switch ($data['pedir']) {
-	case 'listar': listar($datab); break;
+	case 'listar': listar($datab, $data); break;
 	case 'buscarPorFiltros': buscarPorFiltros($datab,$data); break;
 	case 'registrosDNI': registrosDNI($datab,$data); break;
 	case 'registrosID': registrosID($datab,$data); break;
@@ -13,13 +14,23 @@ switch ($data['pedir']) {
 		break;
 }
 
-function listar($db){
+function listar($db, $data){
 	$filas = [];
-	$sql= $db->prepare("SELECT m.*, c.dni, c.nombre, s.sede, me.nombre as nombreMedico FROM `muestras` m
-	inner join clientes c on c.id = m.idCliente
-	inner join sedes s on s.id = m.idSede
-	inner join medicos me on me.id = m.idMedico
-	where m.activo = 1 order by m.id desc");
+	if($data['nivel']=='3'){
+		$sql= $db->prepare("SELECT m.*, c.dni, c.nombre, s.sede, me.nombre as nombreMedico FROM `muestras` m
+		inner join clientes c on c.id = m.idCliente
+		inner join sedes s on s.id = m.idSede
+		inner join medicos me on me.id = m.idMedico
+		inner join usuarios u on u.usuNombre = me.dni
+		where m.activo = 1 and u.idUsuario = {$data['idUsuario']} order by m.id desc;");
+	}else{
+		$sql= $db->prepare("SELECT m.*, c.dni, c.nombre, s.sede, me.nombre as nombreMedico FROM `muestras` m
+		inner join clientes c on c.id = m.idCliente
+		inner join sedes s on s.id = m.idSede
+		inner join medicos me on me.id = m.idMedico
+		where m.activo = 1 order by m.id desc");
+	}
+	
 	$sql->execute();
 	while($row= $sql->fetch(PDO::FETCH_ASSOC))
 		$filas [] = $row;

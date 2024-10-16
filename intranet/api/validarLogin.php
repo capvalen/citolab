@@ -2,7 +2,7 @@
 require("conectInfocat.php");
 $data = json_decode(file_get_contents('php://input'), true);
 
-$sql=$datab->prepare("SELECT idUsuario, usuNombre FROM usuarios where usuNombre = ? and usuPass = MD5(?) and usuActivo = 1;");
+$sql=$datab->prepare("SELECT idUsuario, usuNombre, usuPoder FROM usuarios where usuNombre = ? and usuPass = MD5(?) and usuActivo = 1;");
 if($sql->execute([
 	$data['usuario'], $data['clave']
 ])){

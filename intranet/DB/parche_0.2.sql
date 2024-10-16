@@ -1,0 +1,1 @@
+ALTER TABLE `usuarios` CHANGE `usuPoder` `usuPoder` INT(11) NOT NULL COMMENT '3=medico';

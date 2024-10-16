@@ -10,7 +10,8 @@
 	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.rtl.min.css"/>
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.rtl.min.css"/>
 </head>
 <body>
 	<section class="container my-5 " id="app">
@@ -69,6 +70,10 @@
 								<span v-if="medico.esEmpresa==0">Médico</span>
 								<span v-else>Entidad</span>
 							</td>
+							<td v-if="medico.id!=1">
+								<button v-if="!medico.idUsuario" class="btn btn-sm btn-outline-success" title="Crear usuario" @click="crearUsuario(index)"><i class="bi bi-person-check"></i></button>
+								<button v-else class="btn btn-sm btn-outline-primary" title="Asignar contraseña" @click="cambiarClave(index)"><i class="bi bi-key"></i></button>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -78,6 +83,8 @@
 	</section>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+
 	<script>
 		const { createApp, ref, onMounted } = Vue
 	
@@ -103,6 +110,36 @@
 					}
 				}
 				
+				function crearUsuario(index){
+					alertify.prompt( 'Crear usuario', 'A continuación se creará el usuario para el usuario: ' + medicos.value[index].dni + " <br>Ingrese una contraseña para que pueda acceder al sistema", ""
+					, function(evt, value){
+						axios.post(servidor+'Medico.php',{
+						pedir: 'crearUsuario', medico: medicos.value[index], clave: value
+						})
+						.then(response=>{
+							if(response.data.id){
+								medicos.value[index].idUsuario=response.data.id
+								console.log(medicos.value[index])
+							}
+						})
+					}
+					, function() { /*Cancelado*/ });
+				}
+
+				function cambiarClave(index){
+					alertify.prompt( 'Cambiar clave', 'Asigne una nueva clave para el usuario: ' + medicos.value[index].dni , ""
+					, function(evt, value){
+						if(value=='') alert('La clave no puede estar vacía')
+						else{
+							axios.post(servidor+'Medico.php',{
+							pedir: 'cambiarClave', id: medicos.value[index].idUsuario, clave: value
+							})
+							.then(response=> alert('Clave cambiada con éxito'))
+						}
+					}
+					, function() { /*Cancelado*/ });
+				}
+
 				onMounted(()=>{
 					if(!localStorage.getItem('idUsuario')) window.location = 'index.html'
 					else{
@@ -115,7 +152,7 @@
 				})
 				return {
 					sede, medicos,
-					servidor, crear
+					servidor, crear, crearUsuario, cambiarClave
 				}
 			}
 		}).mount('#app')
