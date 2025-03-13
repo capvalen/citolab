@@ -18,7 +18,7 @@ if (!isset($_COOKIE['ckPoder'])) header("Location: index.html");
 		<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #fff;">
 			<div class="container d-flex justify-content-between">
 				<a  class="navbar-brand mt-0 py-0" href="http://citobiolab.com/huancayo" title="CITOBIOLAB" class="logo " style="min-width:198px">
-					<img src="http://citobiolab.com/huancayo/wp-content/uploads/2018/06/logo-biolab.png" alt="CITOBIOLAB" class="normal-logo" style="padding: 12.5px 0; max-height: 75px;" height="75">
+					<img src="https://intranet.citobiolab.com/imgs/cito-logo.png" alt="CITOBIOLAB" class="normal-logo" style="padding: 12.5px 0; max-height: 75px;" height="75">
 				</a>
 				<a class="btn btn-outline-secondary" href="desconectar.php"><i class="bi bi-person-fill-lock"></i> Cerrar sesión</a>
 			</div>
